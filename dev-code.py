@@ -45,8 +45,8 @@ l_count = 0  # count of edges detected by the algorithm for the left side
 r_count = 0
 l_count_prev = 0  # previous edge count for left side
 r_count_prev = 0
-l_prev = GPIO.input(5)
-r_prev = GPIO.input(5)
+l_prev = GPIO.input(GPIO_IN_L)
+r_prev = GPIO.input(GPIO_IN_R)
 l_RPM = 0
 r_RPM = 0
 l_power = 0  # left motor power output
@@ -70,8 +70,8 @@ array_edge_low[:-edge_size] = 1
 def Counter():  # FIXME: convert to a function which takes inputs and has a return statement
     global l_count, r_count, l_array, r_array, array_edge_high, array_edge_low
 
-    l_input = GPIO.input(5)
-    r_input = GPIO.input(3)
+    l_input = GPIO.input(GPIO_IN_L)
+    r_input = GPIO.input(GPIO_IN_R)
 
     # refresh the array. add the newest value to the front and subtract the oldest value from the end
     # FIXME: change to use np.roll()
@@ -124,11 +124,11 @@ t_prev = 0
 SAMPLE_TIME = 1 # seconds between samples of wheel RPM
 t_start = time.time()
 t_sample = SAMPLE_TIME # time until next sample
-duration = 15  # seconds
+duration = 10  # seconds
 
-f = open("~/controls-data/data.csv", "w")
-f.write("Time,Left Power,Left RPM,Right Power,Right RPM\n")
-f.write(f"{t},{l_power},{l_RPM},{r_power},{r_RPM}\n")
+f = open("/home/pi/controls-data/data.csv", "w")
+f.write("Time,Left Power,Left RPM,Left Count,Right Power,Right RPM,Right Count\n")
+f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
 l_power = 50
 r_power = 50
@@ -145,7 +145,8 @@ while t < duration:
         PWM1.start(l_power)
         PWM2.start(r_power)
         print(
-            f"time:{t:.02f} L power:{l_power:.02f} R power: {r_power:.02f} RPM: {r_RPM:.02f}"
+            #f"time:{t:.02f} L power:{l_power:.02f} R power: {r_power:.02f} RPM: {r_RPM:.02f}"
+            f"{t} -------- {l_power} {l_RPM} {l_count} -------- {r_power} {r_RPM} {r_count}"
         )
         #f.write(f"{t},{l_power},{l_distance},{l_RPM},{r_power},{r_distance},{r_RPM}\n")
-        f.write(f"{t},{l_power},{l_RPM},{r_power},{r_RPM}\n")
+        f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
