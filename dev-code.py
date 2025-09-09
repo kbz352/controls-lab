@@ -124,7 +124,7 @@ t_prev = 0
 SAMPLE_TIME = 1 # seconds between samples of wheel RPM
 t_start = time.time()
 t_sample = SAMPLE_TIME # time until next sample
-duration = 10  # seconds
+duration = 5  # seconds
 
 f = open("/home/pi/controls-data/data.csv", "w")
 f.write("Time,Left Power,Left RPM,Left Count,Right Power,Right RPM,Right Count\n")
@@ -150,3 +150,6 @@ while t < duration:
         )
         #f.write(f"{t},{l_power},{l_distance},{l_RPM},{r_power},{r_distance},{r_RPM}\n")
         f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
+
+print(f"Total Rotations:\nLeft: {l_count/40}\nRight: {r_count/40}")
+f.close()
