@@ -1,0 +1,20 @@
+50 power:
+Left wheel: 6.5 rotations, 260 count
+Right wheel: 6.475 rotations, 259 count
+Approx actual:
+Left: 6.6
+Right: 6.6
+
+60 power:
+Left: 7.6 rotations, 304 count
+Right: 7.6 rotations, 304 count
+Approx actual:
+Left: 7.7
+Right: 7.7
+
+70 power:
+Left: 8.7 rotations, 348 count
+Right: 8.775 rotations, 351 count
+Approx actual:
+Left: 8.8
+Right: 8.8
