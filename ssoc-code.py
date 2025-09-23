@@ -124,8 +124,8 @@ def RPM_function():
 # f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
 #for run in [1, 2, 3]:
-run = 1
-for power in np.linspace(0, 100, 11):
+run = "all"
+for power in [100]: #np.linspace(0, 100, 11):
     f = open(f"/home/pi/controls-lab/ssoc-data/power-{power}-run-{run}.csv", "w")
     f.write("Time,Power,Left RPM,Right RPM\n")
 
