@@ -124,13 +124,24 @@ def RPM_function():
 # f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
 #for run in [1, 2, 3]:
-run = 3
+run = 1
 for power in np.linspace(0, 100, 11):
     f = open(f"/home/pi/controls-lab/ssoc-data/power-{power}-run-{run}.csv", "w")
     f.write("Time,Power,Left RPM,Right RPM\n")
 
+    # reset all variables
     l_count = 0
     r_count = 0
+    l_count_prev = 0
+    r_count_prev = 0
+    l_prev = GPIO.input(GPIO_IN_L)
+    r_prev = GPIO.input(GPIO_IN_R)
+    l_RPM = 0
+    r_RPM = 0
+    l_array = np.full(ARRAY_SIZE_ENCODER, l_prev)
+    r_array = np.full(ARRAY_SIZE_ENCODER, r_prev)
+    l_RPM_array = np.full(ARRAY_SIZE_RPM, 0, dtype=decimal.Decimal)
+    r_RPM_array = np.full(ARRAY_SIZE_RPM, 0, dtype=decimal.Decimal)
 
     t = 0  # time
     t_prev = 0
