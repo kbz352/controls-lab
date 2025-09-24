@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import decimal
 import numpy as np
 import time
-# import os, sys
+import sys
 
 ###############
 # Definitions #
@@ -49,8 +49,6 @@ l_prev = GPIO.input(GPIO_IN_L)
 r_prev = GPIO.input(GPIO_IN_R)
 l_RPM = 0
 r_RPM = 0
-l_power = 0  # left motor power output
-r_power = 0  # right motor power output
 
 # starting array
 ARRAY_SIZE_ENCODER = 6
@@ -119,52 +117,59 @@ def RPM_function():
     t_prev = t
 
 
+l_power = 0
+r_power = 0
+duration = 5  # seconds
+SAMPLE_TIME = 1  # seconds between samples of wheel RPM
+filename = "data" # name of csv file to be stored in the data/ directory
 
-# f = open("/home/pi/controls-data/data.csv", "w")
-# f.write("Time,Left Power,Left RPM,Left Count,Right Power,Right RPM,Right Count\n")
-# f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
+args = [
+    ["--left-power", "-lp", "l_power"],
+    ["--right-power", "-rp", "r_power"],
+    ["--duration", "-d", "duration"],
+    ["--sample-time", "-s", "SAMPLE_TIME"],
+]
 
-f = open("/home/pi/controls-lab/calibration-data.csv", "w")
-f.write("Time,Power,Left RPM,Left Count,Right RPM,Right Count\n")
+for n, arg in enumerate(list(sys.argv[:])):
+    if arg == "--help" or arg == "-h":
+        print("Full Command\tShort\tVariable")
+        for arglist in args:
+            print(f"'{arglist[0]}'\t'{arglist[1]}'\t'{arglist[2]}'")
+        exit(0)
+    for arglist in args:
+        if arg == arglist[0] or arg == arglist[1]:
+            exec(f"{arglist[2]} = {sys.argv[n + 1]}")
 
-# l_power = 50
-# r_power = 50
+# NOTE: shouldnt be needed
+# PWM1.start(l_power)
+# PWM2.start(r_power)
 
-for power in [50, 60, 70, 80]:
-    l_count = 0
-    r_count = 0
+t = 0  # time
+t_prev = 0
+t_start = time.time()
+t_sample = SAMPLE_TIME  # time until next sample
 
-    t = 0  # time
-    t_prev = 0
-    SAMPLE_TIME = 1 # seconds between samples of wheel RPM
-    t_start = time.time()
-    t_sample = SAMPLE_TIME # time until next sample
-    duration = 5  # seconds
+f = open(f"/home/pi/controls-lab/data/{filename}.csv", "w")
+f.write("Time,Left Power,Left RPM,Left Count,Right Power,Right RPM,Right Count\n")
+f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
-    f.write(f"{t},{power},{l_RPM},{l_count},{r_RPM},{r_count}\n")
-    PWM1.start(power)
-    PWM2.start(power)
+while t < duration:
+    t = time.time() - t_start
+    Counter()
 
-    while t < duration:
-        t = time.time() - t_start
-        Counter()
+    if t >= t_sample:
+        t_sample += SAMPLE_TIME
+        RPM_function()
+        PWM1.start(l_power)
+        PWM2.start(r_power)
+        print(
+            # f"time:{t:.02f} L power:{l_power:.02f} R power: {r_power:.02f} RPM: {r_RPM:.02f}"
+            f"{t} -------- {l_power} {l_RPM} {l_count} -------- {r_power} {r_RPM} {r_count}"
+        )
+        # f.write(f"{t},{l_power},{l_distance},{l_RPM},{r_power},{r_distance},{r_RPM}\n")
+        f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
-        if t >= t_sample:
-            t_sample += SAMPLE_TIME
-            RPM_function()
-            PWM1.start(power)
-            PWM2.start(power)
-            print(
-                #f"time:{t:.02f} L power:{l_power:.02f} R power: {r_power:.02f} RPM: {r_RPM:.02f}"
-                # f"{t} -------- {l_power} {l_RPM} {l_count} -------- {r_power} {r_RPM} {r_count}"
-                f"{t} --- {power} -------- {l_RPM} {l_count} -------- {r_RPM} {r_count}"
-            )
-            # f.write(f"{t},{l_power},{l_distance},{l_RPM},{r_power},{r_distance},{r_RPM}\n")
-            # f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
-            f.write(f"{t},{power},{l_RPM},{l_count},{r_RPM},{r_count}\n")
-    print(f"Total Rotations:\nLeft: {l_count/40}\nRight: {r_count/40}")
-    PWM1.stop()
-    PWM2.stop()
-    time.sleep(1)
-
+# print(f"Total Rotations:\nLeft: {l_count/40}\nRight: {r_count/40}")
+PWM1.stop()
+PWM2.stop()
 f.close()
