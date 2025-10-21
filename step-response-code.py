@@ -119,7 +119,6 @@ def RPM_function():
 
 initial_power = 50
 final_power = 100
-power_setpoint = initial_power
 
 duration = 15  # seconds
 SAMPLE_TIME = 0.1  # seconds between samples of wheel RPM
@@ -149,6 +148,8 @@ for n, arg in enumerate(list(sys.argv[:])):
 # FIXME: there's got to be a better way than 3 or statements
 if initial_power < 40 or initial_power > 100 or final_power < 40 or final_power > 100:
     print("ERROR: Invalid Power Input: Power values must be between 40% and 100%")
+
+power_setpoint = initial_power
 
 t = 0  # time
 t_prev = 0
