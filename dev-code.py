@@ -119,15 +119,18 @@ def RPM_function():
 
 l_power = 0
 r_power = 0
+rpm_setpoint = 50  # FIXME: add limiters that prevent power above 100 or below ~40
 duration = 5  # seconds
 SAMPLE_TIME = 1  # seconds between samples of wheel RPM
-filename = "data" # name of csv file to be stored in the data/ directory
+filename = "data"  # name of csv file to be stored in the data/ directory
 
 args = [
-    ["--left-power", "-lp", "l_power"],
-    ["--right-power", "-rp", "r_power"],
+    # ["--left-power", "-lp", "l_power"],
+    # ["--right-power", "-rp", "r_power"],
     ["--duration", "-d", "duration"],
     ["--sample-time", "-s", "SAMPLE_TIME"],
+    ["--rpm", "-r", "rpm_setpoint"],
+    ["--filename", "-f", "filename"],
 ]
 
 for n, arg in enumerate(list(sys.argv[:])):
@@ -140,18 +143,14 @@ for n, arg in enumerate(list(sys.argv[:])):
         if arg == arglist[0] or arg == arglist[1]:
             exec(f"{arglist[2]} = {sys.argv[n + 1]}")
 
-# NOTE: shouldnt be needed
-# PWM1.start(l_power)
-# PWM2.start(r_power)
-
 t = 0  # time
 t_prev = 0
 t_start = time.time()
 t_sample = SAMPLE_TIME  # time until next sample
 
 f = open(f"/home/pi/controls-lab/data/{filename}.csv", "w")
-f.write("Time,Left Power,Left RPM,Left Count,Right Power,Right RPM,Right Count\n")
-f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
+f.write("Time,RPM Setpoint,Left Power,Left RPM,Left Count,Right Power,Right RPM,Right Count\n")
+f.write(f"{t},{rpm_setpoint},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
 while t < duration:
     t = time.time() - t_start
@@ -160,16 +159,21 @@ while t < duration:
     if t >= t_sample:
         t_sample += SAMPLE_TIME
         RPM_function()
-        PWM1.start(l_power)
-        PWM2.start(r_power)
+        PWM1.start((rpm_setpoint + 8.44721) / 1.34016)  # left wheel SSOC curvefit
+        PWM2.start((rpm_setpoint + 8.94287) / 1.34931)  # right wheel SSOC curvefit
         print(
-            # f"time:{t:.02f} L power:{l_power:.02f} R power: {r_power:.02f} RPM: {r_RPM:.02f}"
-            f"{t} -------- {l_power} {l_RPM} {l_count} -------- {r_power} {r_RPM} {r_count}"
+            f"time: {t:.02f} ----- l_power: {l_power:.02f} l_RPM: {l_RPM:.02f} ----- r_power: {r_power:.02f} r_RPM: {r_RPM:.02f}"
+            # f"{t} -------- {l_power} {l_RPM} {l_count} -------- {r_power} {r_RPM} {r_count}"
         )
         # f.write(f"{t},{l_power},{l_distance},{l_RPM},{r_power},{r_distance},{r_RPM}\n")
-        f.write(f"{t},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
+        f.write(f"{t},{rpm_setpoint},{l_power},{l_RPM},{l_count},{r_power},{r_RPM},{r_count}\n")
 
 # print(f"Total Rotations:\nLeft: {l_count/40}\nRight: {r_count/40}")
 PWM1.stop()
 PWM2.stop()
 f.close()
+
+""" SSOC Curve Fits:
+left: 1.34016x - 8.44721
+right: 1.34931x - 8.94287
+"""
