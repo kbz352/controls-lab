@@ -64,6 +64,7 @@ l_i = 0  # integral summation for left wheel
 r_i = 0  # integral summation for right wheel
 l_e_prev = 0  # previous error for left wheel
 r_e_prev = 0  # previous error for right wheel
+method = "ITAE-PI"
 
 # starting array
 ARRAY_SIZE_ENCODER = 6
@@ -185,7 +186,6 @@ r_t0 = 0.1442
 # FIXME: set actual value
 bias = 0
 
-method = "ITAE-PI"
 if method == "ITAE-PI":
     l_Kc = 0.586 / l_K * (l_t0 / l_tau) ** (-0.916)
     l_tauI = l_tau / (1.03 - 0.165 * (l_t0 / l_tau))
@@ -235,7 +235,7 @@ while t < duration:
         PWM1.start(l_power)
         PWM2.start(r_power)
         print(
-            f"time: {t:.02f} setpoint: {setpoint:.02f} ----- l_RPM: {l_RPM:.02f} r_RPM: {r_RPM:.02f}"
+                f"time: {t:.02f} setpoint: {setpoint:.02f} ----- l_RPM: {l_RPM:.02f} r_RPM: {r_RPM:.02f} ----- l_power: {l_power:.02f} r_power: {r_power:.02f}"
         )
         f.write(f"{t},{setpoint},{l_RPM},{r_RPM},{l_power},{r_power}\n")
 
