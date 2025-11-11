@@ -194,14 +194,21 @@ if method == "ITAE-PI":
     r_tauI = r_tau / (1.03 - 0.165 * (r_t0 / r_tau))
     r_tauD = 0
 
-# elif method == "ITAE-PID":
-else:
+elif method == "ITAE-PID":
     l_Kc = 0.965 / l_K * (l_t0 / l_tau) ** (-0.85)
     l_tauI = l_tau / (0.796 - 0.1465 * (l_t0 / l_tau))
     l_tauD = 0.308 * l_tau * (l_t0 / l_tau) ** (0.929)
     r_Kc = 0.965 / r_K * (r_t0 / r_tau) ** (-0.85)
     r_tauI = r_tau / (0.796 - 0.1465 * (r_t0 / r_tau))
     r_tauD = 0.308 * r_tau * (r_t0 / r_tau) ** (0.929)
+
+elif method == "ZN":
+    l_Kc = 1
+    l_tauI = np.inf
+    l_tauD = 0
+    r_Kc = 1
+    r_tauI = np.inf
+    r_tauD = 0
 
 t = 0  # time
 t_prev = 0
