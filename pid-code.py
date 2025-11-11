@@ -67,6 +67,13 @@ l_e_prev = 0  # previous error for left wheel
 r_e_prev = 0  # previous error for right wheel
 method = "ITAE-PI"
 
+l_Kc = 0
+l_tauI = 0
+l_tauD = 0
+r_Kc = 0
+r_tauI = 0
+r_tauD = 0
+
 # starting array
 ARRAY_SIZE_ENCODER = 6
 l_array = np.full(ARRAY_SIZE_ENCODER, l_prev)
