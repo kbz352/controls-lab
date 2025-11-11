@@ -56,6 +56,7 @@ l_power = 0  # power to left wheel
 r_power = 0  # power to right wheel
 duration = 30  # seconds
 SAMPLE_TIME = 0.01  # seconds between samples of wheel RPM
+SAMPLE_TIME = 0.1  # seconds between samples of wheel RPM
 
 run = 1  # indicatior of number of runs, used for argv batch runs
 
@@ -183,7 +184,6 @@ r_K = 1.157
 r_tau = 0.120
 r_t0 = 0.1442
 
-# FIXME: set actual value
 bias = 0
 
 if method == "ITAE-PI":
@@ -203,12 +203,37 @@ elif method == "ITAE-PID":
     r_tauD = 0.308 * r_tau * (r_t0 / r_tau) ** (0.929)
 
 elif method == "ZN":
-    l_Kc = 1
-    l_tauI = np.inf
+    # l_Kc = 3
+    # l_tauI = np.inf
+    # l_tauD = 0
+    # r_Kc = 3
+    # r_tauI = np.inf
+    # r_tauD = 0
+
+    # P
+    # l_Kc = 3/2
+    # l_tauI = 0
+    # l_tauD = 0
+    # r_Kc = 3/2
+    # r_tauI = 0
+    # r_tauD = 0
+
+    # PI
+    l_Kc = 3/2.2
+    l_tauI = 0.5/1.2
     l_tauD = 0
-    r_Kc = 1
-    r_tauI = np.inf
+    r_Kc = 3/2.2
+    r_tauI = 0.5/1.2
     r_tauD = 0
+
+    # PID
+    # l_Kc = 3/1.7
+    # l_tauI = 0.5/2
+    # l_tauD = 0.5/8
+    # r_Kc = 3/1.7
+    # r_tauI = 0.5/2
+    # r_tauD = 0.5/8
+    # bias = 50
 
 t = 0  # time
 t_prev = 0
@@ -218,7 +243,7 @@ r_t_prev_PID = t_start
 t_sample = SAMPLE_TIME  # time until next sample
 
 filename = (
-    f"{method}-{setpoint}-data"  # name of csv file to be stored in the data/ directory
+    f"{method}-{setpoint}-data-run-{run}"  # name of csv file to be stored in the data/ directory
 )
 f = open(f"/home/pi/controls-lab/pid-data/{filename}.csv", "w")
 f.write("Time,RPM Setpoint,Left RPM,Right RPM,Left Power,Right Power\n")
