@@ -1,32 +1,32 @@
 ITAE-PID:
     Run 1: 
-        Distance Traveled: 347" 
+        Distance Traveled: 417" 
         Left Movement: 37"
     Run 2: 
-        Distance Traveled: 338" 
+        Distance Traveled: 408" 
         Left Movement: 49"
     Run 3: 
-        Distance Traveled: 335" 
+        Distance Traveled: 405" 
         Left Movement: 71"
 
 ITAE-PI:
     Run 1: 
-        Distance Traveled: 336" 
+        Distance Traveled: 406" 
         Left Movement: 67"
     Run 2: 
-        Distance Traveled: 342" 
+        Distance Traveled: 412" 
         Left Movement: 37"
     Run 3: 
-        Distance Traveled: 333" 
+        Distance Traveled: 403" 
         Left Movement: 77"
 
 Z-N:
     Run 1: 
-        Distance Traveled: 341" 
+        Distance Traveled: 411" 
         Left Movement: 27"
     Run 2: 
-        Distance Traveled: 344" 
+        Distance Traveled: 414" 
         Left Movement: 7"
     Run 3: 
-        Distance Traveled: 347" 
+        Distance Traveled: 417" 
         Left Movement: 12"
