@@ -60,7 +60,8 @@ duration = 30  # seconds
 SAMPLE_TIME = 0.01  # seconds between samples of wheel RPM
 SAMPLE_TIME = 0.1  # seconds between samples of wheel RPM
 
-wheel_dia = 3  # inches
+wheel_dia = 2.6378 # inches
+wheel_circum = np.pi * wheel_dia /12
 distance = 1e6  # ft
 
 run = 1  # indicatior of number of runs, used for argv batch runs
@@ -237,8 +238,8 @@ while t < duration:
         PWM1.start(l_power)
         PWM2.start(r_power)
 
-        l_distance = (wheel_dia / 12) * l_count / 40  # distance in feet
-        r_distance = (wheel_dia / 12) * r_count / 40  # distance in feet
+        l_distance = wheel_circum * l_count / 40  # distance in feet
+        r_distance = wheel_circum * r_count / 40  # distance in feet
 
         if l_distance >= distance or r_distance >= distance:
             break
